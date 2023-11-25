@@ -22,4 +22,10 @@ public record Actor(String firstName, String lastName) {
 		list.forEach(actor -> newMap.computeIfAbsent(function.apply(actor), s -> new ArrayList<Actor>()).add(actor));
 		return newMap;
 	}
+	
+	public static <T, U> Map<U, List<T>> GroupByGeneric(List<T> list, Function<T, U> function) {
+		var newMap = new HashMap<U, List<T>>();
+		list.forEach(element -> newMap.computeIfAbsent(function.apply(element), s -> new ArrayList<T>()).add(element));
+		return newMap;
+	}
 }

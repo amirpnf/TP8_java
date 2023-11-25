@@ -34,15 +34,15 @@ import java.util.Locale;
 
 public class Lambdas {
 	
-	public static void upperCaseAll(List<String> list) {
-		list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
-	}
-	
-	public static void main(String[] args) {
-		var list = new ArrayList<String>(List.of("Hello", "world", "you stink"));
-		upperCaseAll(list);
-		System.out.println(list);
-	}
+  public static void upperCaseAll(List<String> list) {
+  	list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
+  }
+  
+  public static void main(String[] args) {
+  	var list = new ArrayList<String>(List.of("Hello", "world", "you stink"));
+  	upperCaseAll(list);
+  	System.out.println(list);
+  }
 }
 ```
 
@@ -89,21 +89,21 @@ import java.util.Map;
 
 public class Lambdas {
 	
-	public static void upperCaseAll(List<String> list) {
-		list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
-	}
-	
-	public static Map<String, Integer> occurences(List<String> list) {
-		var map = new HashMap<String, Integer>();
-		list.forEach(s -> map.merge(s, 1, (v1, v2) -> v1 + v2));
-		return map;
-	}
-	
-	public static void main(String[] args) {
-		var list = new ArrayList<String>(List.of("Hello", "world", "you stink", "foo", "foo"));
-		upperCaseAll(list);
-		System.out.println(occurences(list));
-	}
+  public static void upperCaseAll(List<String> list) {
+  	list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
+  }
+  
+  public static Map<String, Integer> occurences(List<String> list) {
+  	var map = new HashMap<String, Integer>();
+  	list.forEach(s -> map.merge(s, 1, (v1, v2) -> v1 + v2));
+  	return map;
+  }
+  
+  public static void main(String[] args) {
+  	var list = new ArrayList<String>(List.of("Hello", "world", "you stink", "foo", "foo"));
+  	upperCaseAll(list);
+  	System.out.println(occurences(list));
+  }
 }
 ```
 
@@ -121,22 +121,21 @@ import java.util.Map;
 
 public class Lambdas {
 	
-	public static void upperCaseAll(List<String> list) {
-		list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
-	}
-	
-	public static Map<String, Integer> occurences(List<String> list) {
-		var map = new HashMap<String, Integer>();
-		list.forEach(s -> map.merge(s, 1, Integer::sum));
-		return map;
-	}
-	
-	public static void main(String[] args) {
-		var list = new ArrayList<String>(List.of("Hello", "world", "you stink", "foo", "foo"));
-		upperCaseAll(list);
-		System.out.println(occurences(list));
-	}
-	
+  public static void upperCaseAll(List<String> list) {
+  	list.replaceAll(s -> s.toUpperCase(Locale.ROOT));
+  }
+  
+  public static Map<String, Integer> occurences(List<String> list) {
+  	var map = new HashMap<String, Integer>();
+  	list.forEach(s -> map.merge(s, 1, Integer::sum));
+  	return map;
+  }
+  
+  public static void main(String[] args) {
+  	var list = new ArrayList<String>(List.of("Hello", "world", "you stink", "foo", "foo"));
+  	upperCaseAll(list);
+  	System.out.println(occurences(list));
+  }
 }
 ```
 
@@ -144,12 +143,12 @@ public class Lambdas {
 
  On souhaite pouvoir grouper des acteurs par leurs prénoms (firstName), avec les acteurs définis ainsi :
 ```java
-     public record Actor(String firstName, String lastName) {
-       public Actor {
-         Objects.requireNonNull(firstName);
-         Objects.requireNonNull(lastName);
-       }
+   public record Actor(String firstName, String lastName) {
+    public Actor {
+      Objects.requireNonNull(firstName);
+      Objects.requireNonNull(lastName);
     }
+  }
 ```    
 
 On va pour cela écrire une méthode actorGroupByFirstName qui prend en paramètre une liste d'acteurs, par exemple [Actor("bob", "de niro"), Actor("willy", "cat"), Actor("bob", "cat")] et renvoie une Map qui, pour un prénom, contient une liste de tous les acteurs ayant ce prénom. Avec notre exemple de liste, cela donne :
@@ -188,9 +187,9 @@ map.computeIfAbsent(key, function) with this lambda : (String) -> new ArrayList<
 
 ```java
 public static Map<String, List<Actor>> actorGroupByFirstName(List<Actor> list) {
-	var newMap = new HashMap<String, List<Actor>>();
-	list.forEach(s -> newMap.computeIfAbsent(s.firstName, k -> new ArrayList<Actor>()).add(s));
-	return newMap;
+  var newMap = new HashMap<String, List<Actor>>();
+  list.forEach(s -> newMap.computeIfAbsent(s.firstName, k -> new ArrayList<Actor>()).add(s));
+  return newMap;
 }
 ```
 
@@ -216,5 +215,24 @@ The second parameter has this type : `Function<Actor, String>`
 Here's the actorGroupBy method :
 
 ```java
-
+  public static Map<String, List<Actor>> actorGroupBy(List<Actor> list, Function<Actor, String> function) {
+  	var newMap = new HashMap<String, List<Actor>>();
+  	list.forEach(actor -> newMap.computeIfAbsent(function.apply(actor), s -> new ArrayList<Actor>()).add(actor));
+  	return newMap;
+  }
 ```
+
+6. Optionnellement, on peut généraliser pour que la méthode ne fonctionne pas uniquement avec des acteurs, mais avec n'importe quel type.
+Écrire la méthode groupBy qui prend en paramètre n'importe quel type de liste et n'importe quelle fonction.
+Note : ici, on a besoin de deux paramètres de type : T qui est l'équivalent de Actor et U qui est l'équivalent de String, afin que cela fonctionne aussi si la clé pour grouper n'est pas de type String (par exemple, un autre type de composant du record). 
+
+**Answer** : Here's the generic version of our `groupBy` function :
+
+```java
+public static <T, U> Map<U, List<T>> GroupByGeneric(List<T> list, Function<T, U> function) {
+  var newMap = new HashMap<U, List<T>>();
+  list.forEach(element -> newMap.computeIfAbsent(function.apply(element), s -> new ArrayList<T>()).add(element));
+  return newMap;
+}
+```
+
