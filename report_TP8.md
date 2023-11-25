@@ -7,7 +7,7 @@ On souhaite écrire, dans une classe Lambdas, une méthode statique upperCaseAll
 1. Rappeler comment on met une chaîne de caractères en majusucules, indépendamment de la langue dans laquelle l'OS est configuré. 
 
 **Answer**:
-In order to change every character of a String to uppercase, we can use the `tpUpperCase` method of the String class, regardless of the language
+In order to change every character of a String to uppercase, we can use the `toUpperCase` method of the String class, regardless of the language
 in which the OS is figured.
 
 2. On va utiliser la méthode List.replaceAll pour mettre toutes les chaînes de caractères en majuscules. Quelle est l'interface fonctionnelle utilisée par la méthode replaceAll ? 
@@ -171,7 +171,7 @@ On va pour cela écrire une méthode actorGroupByFirstName qui prend en paramèt
 - mappingFunction : Function<? super K,? extends V> mappingFunction>
 
 This function tries attempts to compute the value of a key, if this key isn't already associated with a value in the map. Unless returns null.
-mapping function should be a lambda of `Function` functional interface.
+Mapping function should be a lambda of `Function` functional interface.
 
 We use this function as follows :
 First, we create a new empty HashMap. For each key present in the Old map, we call
